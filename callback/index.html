@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Authorization result | Zigzag Troupe Daily Drop</title>
+<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;line-height:1.6;color:#222}h1{font-size:1.5rem}.row{margin:1rem 0}.label{font-weight:600}.val{display:block;word-break:break-all;background:#f3f3f3;padding:.5rem;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;margin:.3rem 0}button{padding:.35rem .8rem;cursor:pointer}.err{color:#a00}footer{margin-top:2.5rem;font-size:.85rem;color:#666;border-top:1px solid #ddd;padding-top:.8rem}</style>
+</head>
+<body>
+<h1>Zigzag Troupe Daily Drop: authorization result</h1>
+<p id="status">Reading the result…</p>
+<div id="out"></div>
+<p style="font-size:.9rem;color:#555">This page only displays the values TikTok put in the address bar. It sends nothing anywhere, stores nothing, and loads no external scripts or analytics. Copy the code back to the operator's tool to finish connecting.</p>
+<footer><a href="../">Home</a> · <a href="../terms.html">Terms</a> · <a href="../privacy.html">Privacy</a> · <a href="../data-deletion.html">Data Return / Deletion</a></footer>
+<script>
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var keys = ["code", "state", "error", "error_description"];
+  var out = document.getElementById("out");
+  var status = document.getElementById("status");
+  var found = 0;
+  keys.forEach(function (k) {
+    var v = p.get(k);
+    if (v === null) return;
+    found++;
+    var row = document.createElement("div"); row.className = "row";
+    var label = document.createElement("span"); label.className = "label"; label.textContent = k;
+    var val = document.createElement("code"); val.className = "val"; val.textContent = v;
+    var btn = document.createElement("button"); btn.type = "button"; btn.textContent = "Copy";
+    btn.addEventListener("click", function () {
+      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(v).then(done, function () { fallback(); });
+      } else { fallback(); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(val);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "Select + copy manually"; }
+      }
+    });
+    row.appendChild(label); row.appendChild(val); row.appendChild(btn);
+    out.appendChild(row);
+  });
+  if (p.get("error")) { status.textContent = "TikTok returned an error."; status.className = "err"; }
+  else if (p.get("code")) { status.textContent = "Authorization code received."; }
+  else if (!found) { status.textContent = "No authorization parameters found in this URL."; }
+  else { status.textContent = "Parameters received."; }
+})();
+</script>
+</body>
+</html>
